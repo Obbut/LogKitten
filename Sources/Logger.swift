@@ -8,10 +8,6 @@
 
 import Foundation
 
-public enum LogKittenError: Error {
-    case noRegisteredFrameworkFound
-}
-
 public class Logger : _Logger {
     public init() {
         if Logger.componentLogger == nil {
@@ -19,40 +15,11 @@ public class Logger : _Logger {
         }
     }
     
-    public func log<L : Level>(_ message: Message<L>, fromFramework framework: Framework) {
+    public func log(_ message: Message) {
         for destination in destinations {
-            destination.log(message, fromFramework: framework)
+            destination.log(message)
         }
     }
-    
-    public private(set) var frameworks = [(UInt8, Framework)]()
-    public private(set) var subjects = [UInt8: [(UInt8, SubjectRepresentable.Type)]]()
-    
-    public func registerFramework(_ framework: Framework) {
-        let id: UInt8 = self.frameworks.last?.0 ?? 0
-        
-        frameworks.append((id, framework))
-        
-        framework.logKittenID = id
-    }
-    
-    @discardableResult
-    public func registerSubject(_ subject: SubjectRepresentable.Type, forFramework framework: Framework) throws -> UInt8 {
-        guard let id = framework.logKittenID else {
-            throw LogKittenError.noRegisteredFrameworkFound
-        }
-        
-        var subjects = self.subjects[id] ?? []
-        let subjectId: UInt8 = subjects.last?.0 ?? 0
-        
-        // Add the subject
-        subjects.append((subjectId, subject))
-        self.subjects[id] = subjects
-        
-        return subjectId
-    }
-    
-    public static let `default` = Logger()
     
     internal static weak var componentLogger: Logger? = nil
     

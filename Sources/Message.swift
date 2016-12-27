@@ -1,12 +1,8 @@
 import Foundation
 
-public enum Subject {
-    case string(String)
-    case attributedData(type: UInt8, data: [UInt8])
-}
-
-public struct Message<L: Level> {
-    internal init(level: L, subject: Subject, date: Date, source: String, origin: Origin) {
+public struct Message {
+    
+    internal init(level: Level, subject: Subject, date: Date, source: String, origin: Origin) {
         self.level = level
         self.subject = subject
         self.date = date
@@ -14,11 +10,16 @@ public struct Message<L: Level> {
         self.origin = origin
     }
     
+    public enum Subject {
+        case string(String)
+    }
+    
     public typealias Origin = (function: String, filePath: String, line: Int, column: Int)
     
-    public var level: L
+    public var level: Level
     public var subject: Subject
     public var date: Date
     public var source: String
     public var origin: Origin
+    
 }

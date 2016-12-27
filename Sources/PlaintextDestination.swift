@@ -6,10 +6,10 @@ public class PlaintextDestination : Destination {
     public var renderer: PlaintextRenderer = ConfigurableRenderer()
     public var transformers: [PlaintextTransformer] = []
     
-    public func log<L: Level>(_ message: Message<L>, fromFramework framework: Framework) {
-        var renderedMessage = renderer.render(message, fromFramework: framework)
+    public func log(_ message: Message) {
+        var renderedMessage = renderer.render(message)
         for transformer in transformers {
-            renderedMessage = transformer.transform(renderedMessage, context: message, fromFramework: framework)
+            renderedMessage = transformer.transform(renderedMessage, context: message)
         }
         self.log(renderedMessage)
     }

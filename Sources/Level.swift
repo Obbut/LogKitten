@@ -6,52 +6,10 @@
 //
 //
 
-public protocol Level: CustomStringConvertible, Equatable, Comparable, Hashable {
-    var compareValue: Int { get }
-    var name: String { get }
-}
-
-extension Level {
-    public var hashValue: Int {
-        return self.compareValue
-    }
-    
-    public var name: String {
-        return self.description
-    }
-}
-
-public func <<A: Level, B: Level>(lhs: A, rhs: B) -> Bool {
-    return lhs.compareValue < rhs.compareValue
-}
-
-public func ==<A: Level, B: Level>(lhs: A, rhs: B) -> Bool {
-    return lhs.hashValue == rhs.hashValue
-}
-
-public enum DefaultLevel : Level, AnsiColorRepresentable {
+public enum Level : CustomStringConvertible, Equatable, Comparable, Hashable {
     case verbose, debug, info, success, warning, error, fatal
     
-    public var ansiColor: AnsiColor {
-        switch self {
-        case .verbose:
-            return AnsiColor.darkGray
-        case .debug:
-            return AnsiColor.purple
-        case .info:
-            return AnsiColor.cyan
-        case .success:
-            return AnsiColor.green
-        case .warning:
-            return AnsiColor.yellow
-        case .error:
-            return AnsiColor.red
-        case .fatal:
-            return AnsiColor.lightRed
-        }
-    }
-    
-    public var compareValue: Int {
+    private var compareValue: Int {
         switch self {
         case .verbose:
             return 10
@@ -68,6 +26,10 @@ public enum DefaultLevel : Level, AnsiColorRepresentable {
         case .fatal:
             return 70
         }
+    }
+    
+    public var hashValue: Int {
+        return self.compareValue
     }
     
     public var description: String {
@@ -87,5 +49,13 @@ public enum DefaultLevel : Level, AnsiColorRepresentable {
         case .fatal:
             return "Fatal"
         }
+    }
+    
+    public static func ==(lhs: Level, rhs: Level) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    public static func <(lhs: Level, rhs: Level) -> Bool {
+        return lhs.compareValue < rhs.compareValue
     }
 }
