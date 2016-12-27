@@ -38,7 +38,7 @@ public class ConfigurableRenderer : PlaintextRenderer {
     private func render(_ subject: Subject, fromFramework framework: Framework) -> String {
         switch subject {
         case .string(let s): return s
-        case .attributedData(let type, let data):
+        case .attributedData(let type, _):
             guard let frameworkId = framework.logKittenID else {
                 return "Unknown"
             }
@@ -49,7 +49,7 @@ public class ConfigurableRenderer : PlaintextRenderer {
                 return "Unknown"
             }
             
-            return type.convertToString(fromData: data)
+            return type.name
         }
     }
     
