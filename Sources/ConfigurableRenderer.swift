@@ -35,13 +35,6 @@ public class ConfigurableRenderer : PlaintextRenderer {
     
     let format = "%date [%level] %message    [%source:%filename:%function]"
     
-    private func render(_ subject: Message.Subject) -> String {
-        switch subject {
-        case .string(let text):
-            return text
-        }
-    }
-    
     public func render(_ message: Message) -> String {
         let path = message.origin.filePath
         let filename = NSString(string: path).lastPathComponent
@@ -60,7 +53,7 @@ public class ConfigurableRenderer : PlaintextRenderer {
             "%function": message.origin.function,
             "%line": "\(message.origin.line)",
             "%column": "\(message.origin.column)",
-            "%message": render(message.subject),
+            "%message": message.text,
             "%level": message.level.description,
             "%source": message.source,
             "%date": dateFormatter.string(from: message.date)
